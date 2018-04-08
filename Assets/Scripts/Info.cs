@@ -6,12 +6,12 @@ using UnityEngine.UI;
 
 public class Info : MonoBehaviour {
 
-	public Text hostNameText = null;
+	public Text myIpAddressText = null;
 
 	// Use this for initialization
 	void Start ()
 	{
-		hostNameText.text = "Host Name["+ SocketComponent.getLocalHostName() + "]";
+		myIpAddressText.text = "IP Address["+ SocketComponent.getMyIPAddress() + "]";
 	}
 	
 	// Update is called once per frame

@@ -56,10 +56,9 @@ public class SocketComponent : MonoBehaviour
 
 	IEnumerator receive()
 	{
-		//allDone = new ManualResetEvent(false);
-
-		IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-		IPAddress ipAddress = ipHostInfo.AddressList[0];
+		//IPHostEntry ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
+		//IPAddress ipAddress = ipHostInfo.AddressList[0];
+		IPAddress ipAddress = getMyIPAddress();
 		IPEndPoint localEndPoint = new IPEndPoint(ipAddress, PORT);
 
 		listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
@@ -114,10 +113,9 @@ public class SocketComponent : MonoBehaviour
 	}
 
 
-	public void send(string remoteName, int port, byte[] data)
+	public void send(byte[] ipAddr, int port, byte[] data)
 	{
-		IPHostEntry ipHostInfo = Dns.GetHostEntry(remoteName);
-		IPAddress ipAddress = ipHostInfo.AddressList[0];
+		IPAddress ipAddress = new IPAddress(ipAddr);
 		IPEndPoint remoteEndPoint = new IPEndPoint(ipAddress, port);
 
 		Socket socket;
@@ -129,8 +127,25 @@ public class SocketComponent : MonoBehaviour
 		socket.Close();
 	}
 
-	public static string getLocalHostName()
+	public static IPAddress getMyIPAddress()
 	{
-		return Dns.GetHostName();
+		IPAddress[] addresses = Dns.GetHostAddresses(Dns.GetHostName());
+
+		for(int i=0; i<addresses.Length; i++)
+		{
+			IPAddress a = addresses[i];
+
+			if(a.AddressFamily == AddressFamily.InterNetwork)
+			{
+				//	LANのプライベートアドレスを判別
+				//	ローカル内のプライベートアドレスは引っかからないようにする
+				string ipstr = a.ToString();
+				if(ipstr.StartsWith("192.168.0.") || ipstr.StartsWith("172.16."))
+				{
+					return a;
+				}
+			}
+		}
+		return null;
 	}
 }
