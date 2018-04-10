@@ -102,6 +102,7 @@ public class SocketComponent : MonoBehaviour
 
 		byte[] buffer = new byte[512];
 
+		//[todo] データ受信時のバッファサイズ取得と確保
 		int byteCount;
 		byteCount = handler.Receive(buffer);
 

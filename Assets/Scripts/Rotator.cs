@@ -6,7 +6,7 @@ public class Rotator : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		
+		Debug.Log("persistentDataPath=[" + Application.persistentDataPath + "]");
 	}
 	
 	// Update is called once per frame
